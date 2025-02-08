@@ -7,7 +7,7 @@ st.set_page_config(layout="wide")
 st.title("VS Code Embedded in Streamlit")
 
 # Path to store the code-server installation
-CODE_SERVER_PATH = "/usr/local/bin/code-server"
+CODE_SERVER_PATH = "/home/appuser/.local/bin/code-server"
 
 # Function to install code-server if not installed
 def install_code_server():
