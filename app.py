@@ -25,10 +25,10 @@ def start_code_server():
     time.sleep(5)  # Wait for VS Code Server to start
     st.success("VS Code Server started!")
 
-# Function to check if VS Code is running
+# Function to check if VS Code is running (without `pgrep`)
 def is_code_server_running():
-    result = subprocess.run(["pgrep", "-f", "code-server"], stdout=subprocess.PIPE)
-    return result.returncode == 0  # Returns True if running
+    result = subprocess.getoutput("ps aux | grep code-server | grep -v grep")
+    return "code-server" in result  # Returns True if running
 
 # Install and start VS Code if not running
 install_code_server()
