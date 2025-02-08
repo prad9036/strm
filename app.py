@@ -11,11 +11,14 @@ CODE_SERVER_PATH = subprocess.getoutput("which code-server").strip()
 if not CODE_SERVER_PATH:
     CODE_SERVER_PATH = "/home/appuser/.local/bin/code-server"  # Default path for local installs
 
-# Function to install VS Code Server
+# Function to install VS Code Server (without sudo)
 def install_code_server():
     if not os.path.exists(CODE_SERVER_PATH):
         st.info("Downloading and installing VS Code Server...")
-        os.system("curl -fsSL https://code-server.dev/install.sh | sh")
+        install_command = """
+        curl -fsSL https://code-server.dev/install.sh | sh 2>&1 | tee install_log.txt
+        """
+        os.system(install_command)
         st.success("VS Code Server installed successfully!")
 
 # Function to start VS Code Server
@@ -25,7 +28,7 @@ def start_code_server():
     time.sleep(5)  # Wait for VS Code Server to start
     st.success("VS Code Server started!")
 
-# Function to check if VS Code is running (without `pgrep`)
+# Function to check if VS Code is running
 def is_code_server_running():
     result = subprocess.getoutput("ps aux | grep code-server | grep -v grep")
     return "code-server" in result  # Returns True if running
