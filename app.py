@@ -1,19 +1,24 @@
 import streamlit as st
-import subprocess
+import os
+import time
 
 st.set_page_config(layout="wide")
-st.title("Simple Terminal & Embedded Port 8080")
+st.title("Web-Based Terminal & Embedded Port 8080")
 
-# --- TERMINAL SECTION ---
-st.subheader("Basic Terminal Inside Streamlit")
+# Find the correct flask-shell path
+FLASK_SHELL_PATH = os.popen("which flask-shell").read().strip()
 
-# User input for terminal commands
-command = st.text_input("Enter a command:", "ls -la")
+if not FLASK_SHELL_PATH:
+    st.error("Flask-Shell is not installed or the path is incorrect.")
+else:
+    def start_web_terminal():
+        st.info(f"Starting Web Terminal at {FLASK_SHELL_PATH} on port 8080...")
+        os.system(f"{FLASK_SHELL_PATH} --host=0.0.0.0 --port=8080 &")
+        time.sleep(3)  # Give time for the server to start
+        st.success("Web Terminal is running at port 8080!")
 
-if st.button("Run Command"):
-    output = subprocess.getoutput(command)
-    st.text_area("Output:", output, height=300)
+    start_web_terminal()
 
-# --- EMBED PORT 8080 ---
-st.subheader("Embedded Service Running on Port 8080")
+# --- EMBED PORT 8080 INSIDE STREAMLIT ---
+st.subheader("Embedded Web Terminal (Port 8080)")
 st.components.v1.iframe("http://localhost:8080", height=600, scrolling=True)
