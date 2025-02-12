@@ -51,7 +51,7 @@ command = st.text_input("Enter command (Press Enter to execute):")
 if command:
     os.system(f"echo '{command}' > /proc/{os.getpid()}/fd/0")
     st.session_state.terminal_output += f"\n$ {command}\n"
-    st.experimental_rerun()
+    st.rerun()  # Updated from `st.experimental_rerun()`
 
 # --- EMBED PORT 8080 ---
 st.subheader("Embedded Port 8080 Service")
