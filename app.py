@@ -7,7 +7,7 @@ st.set_page_config(layout="wide")
 
 # --- Hardcoded Login Credentials ---
 VALID_USERNAME = "admin"  # Change as needed
-VALID_PASSWORD = "password"  # Change as needed
+VALID_PASSWORD = "Pradeep@123"  # Change as needed
 
 # --- USER AUTHENTICATION ---
 if "logged_in" not in st.session_state:
