@@ -1,7 +1,19 @@
 import streamlit as st
 import subprocess
+import os
+
+# (Optional) Load .env file if using python-dotenv
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # If python-dotenv isn't installed, environment variables should still work
 
 st.set_page_config(layout="wide")
+
+# Get credentials from environment variables
+USERNAME = os.getenv("STREAMLIT_USERNAME", "admin")  # Default: "admin"
+PASSWORD = os.getenv("STREAMLIT_PASSWORD", "password")  # Default: "password"
 
 # --- USER AUTHENTICATION ---
 if "logged_in" not in st.session_state:
@@ -9,9 +21,9 @@ if "logged_in" not in st.session_state:
 
 # Login function
 def login():
-    if st.session_state.username == "admin" and st.session_state.password == "password":  # Change credentials as needed
+    if st.session_state.username == USERNAME and st.session_state.password == PASSWORD:
         st.session_state.logged_in = True
-        st.rerun()  # Corrected function to rerun Streamlit
+        st.rerun()
     else:
         st.error("Invalid username or password")
 
@@ -27,14 +39,12 @@ if not st.session_state.logged_in:
     password = st.text_input("Password", type="password", key="password")
     if st.button("Login"):
         login()
-    st.stop()  # Stop execution until logged in
+    st.stop()
 
 # --- MAIN CONTENT (Only visible after login) ---
 st.title("Simple Terminal Inside Streamlit")
 
-# --- TERMINAL SECTION ---
 st.subheader("Basic Terminal")
-
 command = st.text_input("Enter a command:", "ls -la")
 
 if st.button("Run Command"):
