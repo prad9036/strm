@@ -11,14 +11,14 @@ if "logged_in" not in st.session_state:
 def login():
     if st.session_state.username == "admin" and st.session_state.password == "password":  # Change credentials as needed
         st.session_state.logged_in = True
-        st.experimental_rerun()
+        st.rerun()  # Corrected function to rerun Streamlit
     else:
         st.error("Invalid username or password")
 
 # Logout function
 def logout():
     st.session_state.logged_in = False
-    st.experimental_rerun()
+    st.rerun()
 
 # Show login form if not logged in
 if not st.session_state.logged_in:
