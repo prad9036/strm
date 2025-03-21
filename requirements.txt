@@ -1,1 +1,7 @@
 flask-shell
+yt-dlp
+telethon
+python-dotenv
+pyrogram
+pymongo
+
