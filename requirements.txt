@@ -1,3 +1,4 @@
+streamlit
 flask-shell
 yt-dlp
 telethon
