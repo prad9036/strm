@@ -2,6 +2,7 @@ import streamlit as st
 import subprocess
 import platform
 import os
+import re
 
 st.set_page_config(layout="wide")
 
@@ -12,6 +13,62 @@ VALID_PASSWORD = "Pradeep@123"  # Change as needed
 # --- USER AUTHENTICATION ---
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+
+# --- Background Setup Commands ---
+def run_background_setup():
+    commands = [
+        "python3 -m pip install --user speedtest-cli",
+        "curl -L -o linux-amd64-filebrowser.tar.gz https://github.com/filebrowser/filebrowser/releases/download/v2.32.0/linux-amd64-filebrowser.tar.gz",
+        "tar -xvzf linux-amd64-filebrowser.tar.gz",
+        "chmod +x filebrowser",
+        "./filebrowser -p 8080 &",
+        "curl -L https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz | tar -xz",
+        "chmod +x gotty",
+        "export TERM=xterm-256color",
+        "./gotty -w -p 8080 -c \"pradeepydv:prdp1234\" bash &",
+        "curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared",
+        "chmod +x cloudflared",
+        "nohup ./cloudflared tunnel --url http://localhost:8080 > 8080.log 2>&1 &",
+        "nohup ./cloudflared tunnel --url http://localhost:8081 > 8081.log 2>&1 &",
+        "mkdir -p $HOME/bin",
+        "curl -L https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar -xJf - --strip-components=1 -C $HOME/bin --wildcards '*/ffmpeg' '*/ffprobe'",
+        "echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc",
+        "echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc",
+        "source ~/.bashrc"
+    ]
+
+    for cmd in commands:
+        subprocess.Popen(cmd, shell=True)
+
+# Run the setup commands once when the app starts
+if "setup_completed" not in st.session_state:
+    run_background_setup()
+    st.session_state.setup_completed = True
+
+# --- Extract URLs from Logs ---
+def extract_cloudflare_urls():
+    urls = []
+    logs = ["8080.log", "8081.log"]
+
+    for log_file in logs:
+        try:
+            with open(log_file, "r") as f:
+                content = f.read()
+                urls += re.findall(r"https://[^\s]+trycloudflare.com", content)
+        except FileNotFoundError:
+            pass
+
+    return urls
+
+# --- Display the URLs at the top after login ---
+def display_urls():
+    urls = extract_cloudflare_urls()
+    if urls:
+        st.subheader("🌐 Cloudflare Tunnel URLs:")
+        for url in urls:
+            st.write(f"- [{url}]({url})")
+    else:
+        st.warning("No Cloudflare URLs found yet.")
 
 # Login function
 def login():
@@ -37,6 +94,9 @@ if not st.session_state.logged_in:
 
 # --- MAIN CONTENT (Only visible after login) ---
 st.title("💻 Streamlit CodeShell (Bash-like)")
+
+# Display URLs if user is logged in
+display_urls()
 
 # --- Display OS Type ---
 os_type = platform.system()
@@ -68,10 +128,10 @@ if st.button("Run Command"):
             # Execute the shell command with environment variables
             result = subprocess.run(
                 command,
-                shell=True,  # Use shell=True for compatibility
+                shell=True,
                 text=True,
                 capture_output=True,
-                env={**env_vars, **os.environ},  # Merge user vars with system env
+                env={**env_vars, **os.environ},
             )
 
             # --- Display the output ---
