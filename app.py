@@ -74,6 +74,8 @@ def display_urls():
 def login():
     if st.session_state.username == VALID_USERNAME and st.session_state.password == VALID_PASSWORD:
         st.session_state.logged_in = True
+        # Store login status in URL params
+        st.experimental_set_query_params(logged_in="true")
         st.rerun()
     else:
         st.error("Invalid username or password")
@@ -81,10 +83,17 @@ def login():
 # Logout function
 def logout():
     st.session_state.logged_in = False
+    # Clear URL params
+    st.experimental_set_query_params()
     st.rerun()
 
+# Check URL params to restore session state
+query_params = st.experimental_get_query_params()
+if query_params.get("logged_in") == ["true"]:
+    st.session_state.logged_in = True
+
 # Show login form if not logged in
-if not st.session_state.logged_in:
+if not st.session_state.get("logged_in"):
     st.title("🔒 Login Required")
     username = st.text_input("Username", key="username")
     password = st.text_input("Password", type="password", key="password")
