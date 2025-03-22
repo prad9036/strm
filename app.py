@@ -71,12 +71,11 @@ def display_urls():
         st.warning("No Cloudflare URLs found yet.")
 
 # Login function
-# Login function
 def login():
     if st.session_state.username == VALID_USERNAME and st.session_state.password == VALID_PASSWORD:
         st.session_state.logged_in = True
-        # Store login status in URL params using the new method
-        st.set_query_params(logged_in="true")
+        # Use the old API to set query params
+        st.experimental_set_query_params(logged_in="true")
         st.rerun()
     else:
         st.error("Invalid username or password")
@@ -84,9 +83,10 @@ def login():
 # Logout function
 def logout():
     st.session_state.logged_in = False
-    # Clear URL params
-    st.set_query_params()
+    # Clear URL params using the old API
+    st.experimental_set_query_params()
     st.rerun()
+
 
 # Check URL params to restore session state
 query_params = st.query_params  # Updated from st.experimental_get_query_params()
