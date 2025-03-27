@@ -5,4 +5,5 @@ telethon
 python-dotenv
 pyrogram
 pymongo
+user-agents
 
