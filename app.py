@@ -19,7 +19,7 @@ def get_user_info():
     except:
         ip = "Unknown"
 
-    user_agent = st.experimental_get_query_params().get("user-agent", ["Unknown"])[0]
+    user_agent = st.query_params.get("user-agent", "Unknown")
     parsed_ua = parse(user_agent)
     browser = f"{parsed_ua.browser.family} {parsed_ua.browser.version_string}"
     
