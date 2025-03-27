@@ -121,16 +121,16 @@ def extract_url(log_file):
     except Exception as e:
         return f"Error reading log: {e}"
 
-cloudflare_url = extract_url("8080.log")
-gotty_url = extract_url("8081.log")
+gotty_url = extract_url("8080.log")
+filebrowser_url = extract_url("8081.log")
 
 # --- Main Content ---
 st.title("💻 Streamlit CodeShell (Bash-like)")
 
 # --- Display Cloudflare & Gotty URLs ---
 st.subheader("🌐 Cloudflare & Gotty Access")
-st.write(f"**Cloudflare URL:** {cloudflare_url}")
-st.write(f"**Gotty URL:** {gotty_url}")
+st.write(f"**Cloudflare URL:** {gotty_url}")
+st.write(f"**Gotty URL:** {filebrowser_url}")
 
 # --- Multi-line text area for custom environment variables ---
 st.subheader("🌍 Set Custom Environment Variables")
