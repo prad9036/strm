@@ -19,7 +19,7 @@ def get_user_info():
     except:
         ip = "Unknown"
 
-    user_agent = st.session_state.get("user_agent", "Unknown")
+    user_agent = st.experimental_get_query_params().get("user-agent", ["Unknown"])[0]
     parsed_ua = parse(user_agent)
     browser = f"{parsed_ua.browser.family} {parsed_ua.browser.version_string}"
     
@@ -86,14 +86,6 @@ if session_key in sessions:
 # --- Login Form ---
 if not st.session_state.logged_in:
     st.title("🔒 Login Required")
-
-    if "user_agent" not in st.session_state:
-        st.session_state.user_agent = ""
-
-    user_agent_input = st.text_input("Enter your browser's user-agent string:", key="user_agent")
-
-    if user_agent_input:
-        st.session_state.user_agent = user_agent_input
 
     username = st.text_input("Username", key="username")
     password = st.text_input("Password", type="password", key="password")
