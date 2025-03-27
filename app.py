@@ -128,9 +128,9 @@ filebrowser_url = extract_url("8081.log")
 st.title("💻 Streamlit CodeShell (Bash-like)")
 
 # --- Display Cloudflare & Gotty URLs ---
-st.subheader("🌐 Cloudflare & Gotty Access")
-st.write(f"**Cloudflare URL:** {gotty_url}")
-st.write(f"**Gotty URL:** {filebrowser_url}")
+st.subheader("🌐 Gotty & Filebrowser Access")
+st.write(f"**Gotty URL:** {gotty_url}")
+st.write(f"**Filebrowser URL:** {filebrowser_url}")
 
 # --- Multi-line text area for custom environment variables ---
 st.subheader("🌍 Set Custom Environment Variables")
