@@ -48,6 +48,7 @@ def start_services():
         commands = [
             "curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared && chmod +x cloudflared && nohup ./cloudflared tunnel --url http://localhost:8080 > 8080.log 2>&1 &",
             "curl -L https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz | tar -xz && chmod +x gotty && export TERM=xterm-256color && nohup ./gotty -w -p 8080 -c 'pradeepydv:prdp1234' bash &",
+            "sleep 2",
             "nohup ./cloudflared tunnel --url http://localhost:8081 > 8081.log 2>&1 &",
             "curl -L -o linux-amd64-filebrowser.tar.gz https://github.com/filebrowser/filebrowser/releases/download/v2.32.0/linux-amd64-filebrowser.tar.gz && tar -xvzf linux-amd64-filebrowser.tar.gz && chmod +x filebrowser && nohup ./filebrowser -p 8081 &",
             "mkdir -p $HOME/bin && curl -L https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar -xJf - --strip-components=1 -C $HOME/bin --wildcards '*/ffmpeg' '*/ffprobe' && echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc && echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc && source ~/.bashrc"
