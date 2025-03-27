@@ -4,7 +4,6 @@ import os
 import time
 import json
 import hashlib
-import socket
 import requests
 from user_agents import parse
 
@@ -87,7 +86,15 @@ if session_key in sessions:
 # --- Login Form ---
 if not st.session_state.logged_in:
     st.title("🔒 Login Required")
-    st.session_state.user_agent = st.text_input("Enter your browser's user-agent string:", key="user_agent")
+
+    if "user_agent" not in st.session_state:
+        st.session_state.user_agent = ""
+
+    user_agent_input = st.text_input("Enter your browser's user-agent string:", key="user_agent")
+
+    if user_agent_input:
+        st.session_state.user_agent = user_agent_input
+
     username = st.text_input("Username", key="username")
     password = st.text_input("Password", type="password", key="password")
 
@@ -112,14 +119,14 @@ def logout():
 def extract_url(log_file):
     try:
         result = subprocess.run(
-            f"cat {log_file} | grep -Eo 'https://[a-zA-Z0-9.-]+\\.trycloudflare\\.com/?' | tail -n 1",
+            f"grep -Eo 'https://[a-zA-Z0-9.-]+\\.trycloudflare\\.com/?' {log_file} | tail -n 1",
             shell=True,
             text=True,
             capture_output=True
         )
         return result.stdout.strip() if result.stdout else "No URL found"
-    except:
-        return "Error reading log"
+    except Exception as e:
+        return f"Error reading log: {e}"
 
 cloudflare_url = extract_url("8080.log")
 gotty_url = extract_url("8081.log")
